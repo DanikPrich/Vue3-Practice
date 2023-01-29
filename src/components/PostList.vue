@@ -4,6 +4,7 @@
     <PostItem 
       v-for="post in posts"
       :post="post"
+      :key="post.id"
     />
   </div>
 </template>
@@ -23,9 +24,5 @@ import PostItem from './PostItem.vue';
 </script>
 
 <style scoped>
-.post {
-  padding: 15px;
-  border: 2px solid rgb(236, 122, 60);
-  margin-top: 15px;
-}
+
 </style>
