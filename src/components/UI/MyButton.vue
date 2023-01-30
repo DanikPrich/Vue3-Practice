@@ -8,7 +8,8 @@
 
 <script>
 	export default {
-		
+		//Name must consist of two words
+		name: 'my-button'
 	}
 </script>
 
