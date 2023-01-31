@@ -40,6 +40,20 @@
       <strong> Loading...</strong>
     </div>
 
+    <div class="page__wrapper">
+      <div 
+        v-for="pageNumber in totalPages" 
+        :key="pageNumber"
+        class="page"
+        :class="{
+          'current-page': page === pageNumber
+        }"
+        @click="changePage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -106,6 +120,10 @@ export default {
       } finally {
           this.isPostsLoading = false;
       }
+    },
+    changePage(pageNumber) {
+      this.page = pageNumber;
+      this.fetchPosts();
     }
   },
   computed: {
@@ -151,5 +169,22 @@ export default {
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
+}
+
+.page__wrapper {
+  display: flex;
+  margin-top: 15px;
+  justify-content: center;
+  gap: 12px;
+}
+
+.page{ 
+  border: 1px solid grey;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.current-page {
+  border: 2px solid rgb(236, 122, 60)
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div class="post">
     <div>
+      {{ post.id }}
       <div><strong>Title:</strong> {{ post.title }}</div>
       <div><strong>Descriotion:</strong> {{ post.body }}</div>
     </div>
