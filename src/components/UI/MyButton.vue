@@ -16,8 +16,14 @@
 <style scoped>
   .btn {
     padding: 7px 15px;
-    background: none;
+    background: white;
     border: 1px solid rgb(236, 122, 60);
     color: rgb(236, 122, 60);
+		transition: background-color .2s ease-out;
   }
+	.btn:hover {
+		color: white;
+		border: white;
+		background-color: rgb(236, 122, 60);
+	}
 </style>

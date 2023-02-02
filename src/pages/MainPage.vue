@@ -1,9 +1,8 @@
 <template>
 	<div>
-		<h1>Welcome</h1>
-		<router-link to="/about">About</router-link>
-		<br>
-		<router-link to="/posts">Posts</router-link>
+		<h1>Welcome</h1> 
+
+		Posts is the main page on this site
 	</div>
 </template>
 
