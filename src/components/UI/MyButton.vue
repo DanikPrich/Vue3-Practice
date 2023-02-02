@@ -23,7 +23,7 @@
   }
 	.btn:hover {
 		color: white;
-		border: white;
+		border: 1px solid white;
 		background-color: rgb(236, 122, 60);
 	}
 </style>

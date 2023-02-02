@@ -2,6 +2,7 @@
   <div>
     <h1>Posts page</h1>
     <my-input
+      v-focus
       v-model="searchQuery"
       placeholder="Search"
     >
@@ -40,7 +41,7 @@
       <strong> Loading...</strong>
     </div>
 
-    <div ref="observer" class="observer"></div>
+    <div v-intersection="loadMorePosts" class="observer"></div>
 
     <!-- <div class="page__wrapper">
       <div 
@@ -171,20 +172,6 @@ export default {
  
   mounted() {
     this.fetchPosts();
-
-    const options = {
-      rootMargin: '0px',
-      thresold: 1.0
-    }
-
-    const callback = (entries, observer) => {
-      if(entries[0].isIntersecting && this.page < this.totalPages) {
-        this.loadMorePosts();
-      }
-    }
-
-    const observer = new IntersectionObserver(callback, options);
-    observer.observe(this.$refs.observer);
   },
 }
 </script>

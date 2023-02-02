@@ -18,7 +18,7 @@
 
 .navbar {
 	height: 50px;
-	background-color: rgb(197, 197, 197);
+	background-color: rgb(236, 122, 60);
 	box-shadow: 2px 2px 4px gray;
 	display: flex;
 	align-items: center;
