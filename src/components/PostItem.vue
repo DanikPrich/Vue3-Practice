@@ -1,7 +1,7 @@
 <template>
   <div class="post">
     <div>
-      {{ post.id }}
+      {{ post.id }}, likes = {{ $store.state.likes }}
       <div><strong>Title:</strong> {{ post.title }}</div>
       <div><strong>Descriotion:</strong> {{ post.body }}</div>
     </div>
