@@ -1,45 +1,26 @@
 <template>
   <div>
-    <h1>Likes in store: {{ $store.state.likes }}</h1>
-
-    <my-button @click="$store.commit('incrementLikes')">Like</my-button>
-    <my-button @click="$store.commit('decrementLikes')">Dislike</my-button>
 
     <h1 style="margin-top: 15px">Posts page</h1>
-    <my-input
-      v-focus
-      v-model="searchQuery"
-      placeholder="Search"
-    >
+    <my-input v-focus :model-value="searchQuery" @update:model-value="setSearchQuery" placeholder="Search">
 
     </my-input>
-    <div class="app__btns">  
-      <my-button
-        @click="showDialog"
-      >
+    <div class="app__btns">
+      <my-button @click="showDialog">
         Create post
       </my-button>
 
-      <my-select
-        v-model="selectedSort"
-        :options="sortOptions"
-      />
+      <my-select :model-value="selectedSort" @update:model-value="setSelectedSort" :options="sortOptions" />
     </div>
 
     <my-dialog v-model:show="dialogVisible">
-      <PostForm
-        @create="createPost"
-      >
+      <PostForm @create="createPost">
       </PostForm>
     </my-dialog>
 
-    
 
-    <PostList
-      :posts="sortedAndSearchedPosts"
-      @remove="removePost"
-      v-if="!isPostsLoading"
-    >
+
+    <PostList :posts="sortedAndSearchedPosts" @remove="removePost" v-if="!isPostsLoading">
     </PostList>
 
     <div v-else>
@@ -70,32 +51,29 @@ import PostForm from '@/components/PostForm.vue';
 import PostList from '@/components/PostList.vue';
 import axios from 'axios'
 
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
+
 export default {
   components: {
     PostList, PostForm,
   },
   data() {
     return {
-      posts: [
-        /* { id: 1, title: 'JavaScript', body: 'Post desription' },
-        { id: 2, title: 'JavaScript', body: 'Post desription' },
-        { id: 3, title: 'JavaScript', body: 'Post desription' }, */
-      ],
       dialogVisible: false,
-      isPostsLoading: false,
-      selectedSort: '',
-      searchQuery: '',
-      page: 1,
-      limit: 10,
-      totalPages: 0,
-      sortOptions: [
-        {value: 'title', name: 'By names'},
-        {value: 'body', name: 'By description'},
-        {value: 'id', name: 'By id'},
-      ],
     }
   },
   methods: {
+    ...mapMutations({
+      setPage: 'post/setPage',
+      setSearchQuery: "post/setSearchQuery",
+      setSelectedSort: "post/setSelectedSort"
+    }),
+
+    ...mapActions({
+      loadMorePosts: 'post/loadMorePosts',
+      fetchPosts: 'post/fetchPosts'
+    }),
+
     createPost(post) {
       this.posts.push(post);
       this.dialogVisible = false
@@ -111,42 +89,7 @@ export default {
       this.dialogVisible = true
     },
 
-    async fetchPosts() {
-      try {
-        this.isPostsLoading = true;
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?', {
-          params: {
-            _page: this.page,
-            _limit: this.limit
-          }
-        });
-        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-        this.posts = response.data;
 
-      } catch (e) {
-        alert("Error")
-      } finally {
-          this.isPostsLoading = false;
-      }
-    },
-
-    async loadMorePosts() {
-      
-      try {
-        this.page += 1;
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?', {
-          params: {
-            _page: this.page,
-            _limit: this.limit
-          }
-        });
-        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-        this.posts = [...this.posts, ...response.data];
-
-      } catch (e) {
-        alert("Error")
-      } 
-    },
 
     // changePage(pageNumber) {
     //   this.page = pageNumber;
@@ -154,27 +97,22 @@ export default {
     // }
   },
   computed: {
-    sortedPosts() {
-      return [...this.posts].sort((post1, post2) => {
-        return this.selectedSort == "id" 
-          ? post1[this.selectedSort] - post2[this.selectedSort] 
-          : post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]);
-      })
-    },
-    sortedAndSearchedPosts() {
-      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-    }
+    ...mapState({
+      posts: state => state.post.posts,
+      isPostsLoading: state => state.post.isPostsLoading,
+      selectedSort: state => state.post.selectedSort,
+      searchQuery: state => state.post.searchQuery,
+      page: state => state.post.page,
+      limit: state => state.post.limit,
+      totalPages: state => state.post.totalPages,
+      sortOptions: state => state.post.sortOptions,
+    }),
+    ...mapGetters({
+      sortedPosts: 'post/sortedPosts',
+      sortedAndSearchedPosts: 'post/sortedAndSearchedPosts'
+    })
   },
-  watch: {
-    /* selectedSort(newValue) {
-      this.posts.sort((post1, post2) => {
-        return newValue == "id" 
-          ? post1[newValue] - post2[newValue] 
-          : post1[newValue]?.localeCompare(post2[newValue]);
-      })
-    } */ 
-  },
- 
+
   mounted() {
     this.fetchPosts();
   },
@@ -182,8 +120,7 @@ export default {
 </script>
 
 <style>
-
-.app__btns{
+.app__btns {
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
@@ -196,7 +133,7 @@ export default {
   gap: 12px;
 }
 
-.page{ 
+.page {
   border: 1px solid grey;
   padding: 5px 10px;
   cursor: pointer;
